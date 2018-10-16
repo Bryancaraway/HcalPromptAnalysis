@@ -31,9 +31,14 @@
 #include <TTreeReaderValue.h>
 #include <TTreeReaderArray.h>
 
+// HOW TO USE:
+// Change "numFiles" to desired amount of files to run over (max: 20)
+// Change "geoType" to the type of geometry 
+// outFile names are at the bottom
+ 
 std::vector<std::string> GetInputFiles(std::string geoConfig)
 {
-  int numFiles = 20;
+  int numFiles = 1;
   std::string path = "/cms/data/store/user/bcaraway/condor/outputs/";
   std::string startName = "ntuples_digi_pt25_ttbar_";
   std::string midName = "numEvent1000_CMSSW_10_3_0_pre4_";
@@ -66,8 +71,10 @@ void WriteToOutput(int n_f,  TH2F* h[n_f], TString outputFile, TString fileOptio
 void ana_main()
 {
   
-  std::string geoType = "" ; // D30 geo, "" for D28
-  std::vector<std::string> inputFiles = GetInputFiles(geoType+"");
+  std::string geoType = "D30" ; // "D30" for D30 geo, "" for D28
+  std::vector<std::string> inputFiles;
+  if (geoType == ""){ inputFiles = GetInputFiles(geoType); }
+  else {inputFiles = GetInputFiles(geoType+"_");}
   TChain *ch = new TChain("hgcalTupleTree/tree");
   
   for (unsigned int iFile=0; iFile<inputFiles.size(); ++iFile) {
@@ -204,6 +211,31 @@ void ana_main()
       h_digi_ceh_celluv[i] = new TH2F(name.str().c_str(),name.str().c_str(),36,-5.5,30.5,36,-5.5,30.5);
     }
   
+  TH2F *h_digi_cee_cellxy[28];
+  for(int i=1; i<=28; i++) 
+    {
+      std::ostringstream name;
+      name <<"h_digi_cee_cellxy_"<<i;
+      h_digi_cee_cellxy[i] = new TH2F(name.str().c_str(),name.str().c_str(),1000,-750,750,750,-750,750);
+    }
+
+  TH2F *h_digi_ceh_cellxy[24];
+  for(int i=1; i<=24; i++) 
+    {
+      std::ostringstream name;
+      name <<"h_digi_ceh_cellxy_"<<i;
+      h_digi_ceh_cellxy[i] = new TH2F(name.str().c_str(),name.str().c_str(),1000,-750,750,750,-750,750);
+    }
+  
+  // to figure out fine from coarse wafers 
+  ofstream csv_file;
+  bool openFile = true; // toggle off if you dont want to slow down code 
+
+  if (openFile)
+    {
+      csv_file.open ("cell_uv_map.csv");
+      csv_file << "Layer #, Wafer U, Wafer V, Cell U, Cell V\n";
+    }
 
   // Main Loop Start
   unsigned int nentries = (Int_t)ch->GetEntries();
@@ -213,7 +245,7 @@ void ana_main()
   
       // Progress indicator 
       ievent++;
-      if(ievent%500==0) cout << "[HGCAL Response analyzer] Processed " << ievent << " out of " << nentries << " events" << endl; 
+      if(ievent%50==0) cout << "[HGCAL Response analyzer] Processed " << ievent << " out of " << nentries << " events" << endl; 
       if (maxevents>0 && ievent>maxevents) break;
       if (ievent<=skipevents) continue;
       
@@ -225,6 +257,8 @@ void ana_main()
       // Index definition: 0 -- CEE, 1 -- CEH Si, 2 -- CEH Scint
       // CEE -- 1-28 layers, CEH Si -- 1-24 layers, CEH Scint -- 9-24 layers
 
+      
+
       for (int irc = 0, nrc = HGCDigiEta.GetSize(); irc <nrc; ++irc)
 	{
 	  int l_hit = HGCDigiLayer[irc];
@@ -232,22 +266,55 @@ void ana_main()
 	  int v_wafer = HGCDigiWaferV[irc];
 	  int u_cell = HGCDigiCellU[irc];
 	  int v_cell = HGCDigiCellV[irc];
+	  // testing full cell mapping
+	  int num_cell = 12; // 8 for coarse, 12 for fine ================ NEED TO FIGURE OUT WHICH CELLS ARE COARSE AND FINE
+	  double x_wafer= -2*u_wafer+v_wafer;
+	  double y_wafer= 2*v_wafer;
+	  double x_cell= 1.5*(v_cell-num_cell)+1;
+	  double y_cell= u_cell-0.5*(num_cell+v_cell);
+	  double x_test = x_cell+1.65*num_cell*x_wafer;
+	  double y_test = y_cell+0.9*num_cell*y_wafer;
+	  
+	  std::ostringstream csv_line;
 
 	  if (HGCDigiIndex[irc] == 0)
 	    {
 	      h_digi_cee_waferuv[l_hit]->Fill(u_wafer,v_wafer);
 	      h_digi_cee_celluv[l_hit]->Fill(u_cell,v_cell);
+	      h_digi_cee_cellxy[l_hit]->Fill(x_test,y_test);
+	      if (openFile)
+		{
+		  if (u_cell > 15 || (abs(u_wafer) <= 2 && abs(v_wafer) <= 2))
+		    {
+		      csv_line << l_hit-1 <<","<<u_wafer<<","<<v_wafer<<","<<u_cell<<","<<v_cell<<"\n";
+		      csv_file << csv_line.str().c_str();
+		    }
+		}
 	    }
 	  if (HGCDigiIndex[irc] == 1)
 	    {
 	      h_digi_ceh_waferuv[l_hit]->Fill(u_wafer,v_wafer);
 	      h_digi_ceh_celluv[l_hit]->Fill(u_cell,v_cell);
+	      //if ( l_hit == 6 && ((u_cell == 0 && v_cell == 11) || (u_cell == 12 && v_cell == 0) || (u_cell == 23 &&v_cell == 11) || (u_cell == 12 &&v_cell == 23) || (u_cell == 23 &&v_cell == 23))){
+	      h_digi_ceh_cellxy[l_hit]->Fill(x_test,y_test);
+	      //std::cout<<"Wafer U: " << u_wafer<<", Wafer V: "<<v_wafer<<std::endl;
+
+	      if (openFile)
+		{
+		  if ((u_cell > 15 || (abs(u_wafer) <= 2 && abs(v_wafer) <= 2)) && l_hit <= 6)
+		    {
+		      csv_line << l_hit+27 <<","<<u_wafer<<","<<v_wafer<<","<<u_cell<<","<<v_cell<<"\n";
+		      csv_file << csv_line.str().c_str();
+		    }
+		}
+	      
 	    }
 	  
 	}
-
     }
   
+  if (openFile) csv_file.close();
+
   //end of main event loop
   // write histos to output file
   // Note: cee->28, ceh->24
@@ -258,6 +325,8 @@ void ana_main()
   WriteToOutput(cee,h_digi_cee_celluv,"celluv.root","RECREATE");
   WriteToOutput(ceh,h_digi_ceh_celluv,"celluv.root","UPDATE");
 
+  WriteToOutput(cee,h_digi_cee_cellxy,"cellmap.root","RECREATE");
+  WriteToOutput(ceh,h_digi_ceh_cellxy,"cellmap.root","UPDATE");
   
 }
 
