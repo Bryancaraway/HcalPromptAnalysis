@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 ### Add training and target variables here
-inputVariables = ['gen_pt','pf_pt','pf_eta','pf_ecalFrac','pf_hcalFrac']
+inputVariables = ['gen_pt','pf_pt','pf_eta','pf_ecalFrac','pf_hcalFrac',"npf_nh","npf"]
 targetVariable = 'gen_pt'
 ###
 ### Get data from inputTree

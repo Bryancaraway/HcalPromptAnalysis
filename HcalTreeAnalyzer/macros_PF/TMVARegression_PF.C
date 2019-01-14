@@ -154,8 +154,10 @@ void TMVARegression_PF( TString myMethodList = "" )
    //TCut mycut = "fabs(gen_eta)>2.5&&fabs(gen_eta)<2.9"; // for example: TCut mycut = "abs(var1)<0.5 && abs(var2-0.5)<1";
    TCut mycut = "fabs(gen_eta)>2.5&&fabs(gen_eta)<2.9&&npf_nh==1&&npf==1"; // for example: TCut mycut = "abs(var1)<0.5 && abs(var2-0.5)<1";
    // tell the DataLoader to use all remaining events in the trees after training for testing:
+   //dataloader->PrepareTrainingAndTestTree( mycut,
+   //                                      "nTrain_Regression=1000:nTest_Regression=0:SplitMode=Random:NormMode=NumEvents:!V" );
    dataloader->PrepareTrainingAndTestTree( mycut,
-                                         "nTrain_Regression=1000:nTest_Regression=0:SplitMode=Random:NormMode=NumEvents:!V" );
+					   "nTrain_Regression=1000:nTest_Regression=3148");
    //
    //     dataloader->PrepareTrainingAndTestTree( mycut,
    //            "nTrain_Regression=0:nTest_Regression=0:SplitMode=Random:NormMode=NumEvents:!V" );
