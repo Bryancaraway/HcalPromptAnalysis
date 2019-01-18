@@ -3,7 +3,7 @@ HcalTreeAnalyzer/macros_PF/dataset
 *.root
 *~
 *#
-python/__init__.py
+*__init__.py
 crab_*
 crab.log
 log/

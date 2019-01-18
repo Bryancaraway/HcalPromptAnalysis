@@ -107,23 +107,7 @@ void TupleMaker_PFCandidates::produce(edm::Event& iEvent, const edm::EventSetup&
 	hoEnergyFrac->push_back(0.);
       }
 
-      hcalFrac1->push_back(c.hcalDepthEnergyFraction(1));
-      hcalFrac2->push_back(c.hcalDepthEnergyFraction(2));
-      hcalFrac3->push_back(c.hcalDepthEnergyFraction(3));
-      hcalFrac4->push_back(c.hcalDepthEnergyFraction(4));
-      hcalFrac5->push_back(c.hcalDepthEnergyFraction(5));
-      hcalFrac6->push_back(c.hcalDepthEnergyFraction(6));
-      hcalFrac7->push_back(c.hcalDepthEnergyFraction(7));
-      
-      if (bool_debug){
-      std::cout << c.hcalDepthEnergyFraction(1) << " "
-		<< c.hcalDepthEnergyFraction(2) << " "
-		<< c.hcalDepthEnergyFraction(3) << " "
-		<< c.hcalDepthEnergyFraction(4) << " "
-		<< c.hcalDepthEnergyFraction(5) << " "
-		<< c.hcalDepthEnergyFraction(6) << " "
-		<< c.hcalDepthEnergyFraction(7) << std::endl;
-      }
+          
     }
       
   //

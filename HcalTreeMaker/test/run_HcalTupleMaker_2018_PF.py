@@ -47,15 +47,16 @@ if options.isMINIAOD:
     options.outputFile = 'relval_ttbar_2018_pmx25ns_miniaodsim.root'
 # GEN-SIM-RECO
 else:
-    options.inputFiles = '/store/relval/CMSSW_10_3_0_pre4/RelValTTbar_13/GEN-SIM-RECO/PUpmx25ns_103X_upgrade2018_realistic_v4-v1/20000/7C1DE9C4-2CDF-6745-9636-A49AF087FDF8.root','/store/relval/CMSSW_10_3_0_pre4/RelValTTbar_13/GEN-SIM-RECO/PUpmx25ns_103X_upgrade2018_realistic_v4-v1/20000/571D7C0D-EB5B-AC4B-8D5A-353C2A1E5984.root','/store/relval/CMSSW_10_3_0_pre4/RelValTTbar_13/GEN-SIM-RECO/PUpmx25ns_103X_upgrade2018_realistic_v4-v1/20000/EE898FC9-66FA-5044-96D6-82CFC22F847F.root','/store/relval/CMSSW_10_3_0_pre4/RelValTTbar_13/GEN-SIM-RECO/PUpmx25ns_103X_upgrade2018_realistic_v4-v1/20000/81CF7193-F950-C44F-A164-94DEF2E788FF.root','/store/relval/CMSSW_10_3_0_pre4/RelValTTbar_13/GEN-SIM-RECO/PUpmx25ns_103X_upgrade2018_realistic_v4-v1/20000/0671F9F2-0539-5549-BAFF-1356C29BE98C.root','/store/relval/CMSSW_10_3_0_pre4/RelValTTbar_13/GEN-SIM-RECO/PUpmx25ns_103X_upgrade2018_realistic_v4-v1/20000/21369212-DA68-8A41-8176-5D2C6A0E1B12.root','/store/relval/CMSSW_10_3_0_pre4/RelValTTbar_13/GEN-SIM-RECO/PUpmx25ns_103X_upgrade2018_realistic_v4-v1/20000/D55D802E-CABC-4747-B288-784330B17B80.root','/store/relval/CMSSW_10_3_0_pre4/RelValTTbar_13/GEN-SIM-RECO/PUpmx25ns_103X_upgrade2018_realistic_v4-v1/20000/286A33FA-698B-084B-9521-AB48E9AAA8E8.root','/store/relval/CMSSW_10_3_0_pre4/RelValTTbar_13/GEN-SIM-RECO/PUpmx25ns_103X_upgrade2018_realistic_v4-v1/20000/CC74C106-6A60-4143-8734-1AF16F588FAA.root'
-    options.outputFile = 'relval_ttbar_2018_pmx25ns.root'
+    K0L_path = 'root://kodiak-se.baylor.edu//store/user/hatake/step3/SingleK0L_step3_RECO_10_4_0_E2_500_v2/SingleK0L/CMSSW_10_4_0_Step3_v2/190117_132423/0004/step3_'
+    options.inputFiles = [K0L_path+str(i)+'.root' for i in range(1,5001)]
+    options.outputFile = 'trees_relval_singleK0L_2018.root'
 #
 
 #
 #
 #
 print("maxEvents: ", options.maxEvents)
-print("inputFiles: ", options.inputFiles)
+#print("inputFiles: ", options.inputFiles)
 print("outputFile: ", options.outputFile)
 
 #------------------------------------------------------------------------------------
