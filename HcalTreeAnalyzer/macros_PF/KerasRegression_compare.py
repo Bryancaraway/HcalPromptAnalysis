@@ -87,7 +87,7 @@ model = build_model()
 
 ###########################################
 ### Train the model
-EPOCHS = 700
+EPOCHS = 50
 
 history = model.fit(
   normed_train_data, train_labels,

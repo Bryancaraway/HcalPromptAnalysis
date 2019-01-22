@@ -31,7 +31,7 @@ ls -R
 cd ${MYCMSSW}/src
 scramv1 b ProjectRename
 eval `scramv1 runtime -csh` # cmsenv is an alias not on the workers
-cmsRun ../../run_HcalTupleMaker_2018_PF.py maxEvents=2000 skipEvents=`echo ${1}\*2000|bc`
+cmsRun ../../run_HcalTupleMaker_2018_PF.py maxEvents=10000 skipEvents=`echo ${1}\*10000|bc`
 foreach f (`ls *trees*.root`)
    echo $f
    set name=`basename $f .root`

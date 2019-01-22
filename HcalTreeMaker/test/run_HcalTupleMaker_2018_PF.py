@@ -5,6 +5,8 @@ import FWCore.ParameterSet.Config as cms
 from Configuration.StandardSequences.Eras import eras
 import FWCore.ParameterSet.VarParsing as VarParsing
 
+from glob import glob
+
 #------------------------------------------------------------------------------------
 # Declare the process and input variables
 #------------------------------------------------------------------------------------
@@ -24,7 +26,7 @@ options.register ('isMINIAOD', False, VarParsing.VarParsing.multiplicity.singlet
 ##
 ## Default
 ##
-options.maxEvents = 10 # -1 means all events
+options.maxEvents = -1 # -1 means all events
 #options.skipEvents = 0 # default is 0.
 
 ##
@@ -47,8 +49,9 @@ if options.isMINIAOD:
     options.outputFile = 'relval_ttbar_2018_pmx25ns_miniaodsim.root'
 # GEN-SIM-RECO
 else:
-    K0L_path = 'root://kodiak-se.baylor.edu//store/user/hatake/step3/SingleK0L_step3_RECO_10_4_0_E2_500_v2/SingleK0L/CMSSW_10_4_0_Step3_v2/190117_132423/0004/step3_'
-    options.inputFiles = [K0L_path+str(i)+'.root' for i in range(1,5001)]
+    K0L_path = '/cms/data/store/user/hatake/step3/SingleK0L_step3_RECO_10_4_0_E2_500_v2/SingleK0L/CMSSW_10_4_0_Step3_v2/190117_132423/000*/step*.root'
+    #options.inputFiles = [K0L_path+str(i)+'/step3_'+str(1000*i+j)+'.root' for i in range(0,5) for j in range(1,1000)]
+    options.inputFiles = ["gsiftp://kodiak-se.baylor.edu/"+name for name in glob(K0L_path) if "inMINIAODSIM" not in name] 
     options.outputFile = 'trees_relval_singleK0L_2018.root'
 #
 

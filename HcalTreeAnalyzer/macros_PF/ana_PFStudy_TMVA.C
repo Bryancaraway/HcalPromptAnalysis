@@ -622,7 +622,7 @@ void PFCheckRun(TString rootfile, TString outfile, int maxevents=-1, int option=
 //
 //void ana_PFStudy_TMVA(TString rootfile="relval_ttbar_2018_pmx25ns.root",TString outfile="pfstudy_histograms.root",int maxevents=-1)
 //void ana_PFStudy_TMVA(TString rootfile="relval_ttbar_2018_pmx25ns.root",TString outfile="pfstudy_histograms.root",int maxevents=100)
-void ana_PFStudy_TMVA(TString rootfile="filelist_K0L.txt",TString outfile="pfstudy_histograms_K0S.root",int maxevents=-1)
+void ana_PFStudy_TMVA(TString rootfile="filelist_K0L_10M.txt",TString outfile="pfstudy_histograms_K0S.root",int maxevents=-1)
 {
   PFCheckRun(rootfile, outfile, maxevents, 0);
 }
